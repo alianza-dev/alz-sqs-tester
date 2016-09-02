@@ -28,7 +28,7 @@ push-image:
     - internal/docker-push:
       username: $DOCKER_REPO_USERNAME
       password: $DOCKER_REPO_PASSWORD
-      repository: $DOCKER_REPO/sqsTester
+      repository: $DOCKER_REPO/sqs-tester
       registry: $DOCKER_REGISTRY
       tag: latest
       ports: 9324
