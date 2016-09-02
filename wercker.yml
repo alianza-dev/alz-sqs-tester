@@ -1,0 +1,30 @@
+build:
+  box:
+    id: hseeberger/scala-sbt
+
+  steps:
+    - script: 
+      name: SBT Assemble
+      code: |
+        sbt assembly
+
+push-image:
+  box:
+    id: java:8
+
+  steps:
+    - script:
+      name: Copy resources into container
+      code: |
+        export jarfile=`find . -name "elasticmq-server-assembly*.jar"`
+        cp $jarfile /app.jar
+        cp custom.conf /
+
+    - internal/docker-push:
+      username: $DOCKER_REPO_USERNAME
+      password: $DOCKER_REPO_PASSWORD
+      repository: $DOCKER_REPO/sqsTester
+      registry: $DOCKER_REGISTRY
+      tag: latest
+      ports: 9324
+      cmd: java -Dconfig.file=/custom.conf -jar /app.jar
